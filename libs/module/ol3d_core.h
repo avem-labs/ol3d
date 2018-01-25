@@ -1,5 +1,5 @@
-#ifndef _ol3d_CORE_H_
-#define _ol3d_CORE_H_
+#ifndef _OL3D_CORE_H_
+#define _OL3D_CORE_H_
 
 typedef struct ol3d_module_s     ol3d_module_t;
 // typedef struct ol3d_string_s     ol3d_string_t;

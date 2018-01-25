@@ -1,5 +1,5 @@
-#ifndef _ol3d_UART_H_
-#define _ol3d_UART_H_
+#ifndef _OL3D_UART_H_
+#define _OL3D_UART_H_
 
 
 void uart_init(unsigned int pclk2, unsigned int bound);
