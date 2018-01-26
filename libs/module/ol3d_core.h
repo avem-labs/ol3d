@@ -8,6 +8,7 @@ typedef struct ol3d_module_s     ol3d_module_t;
 #include <stm32f10x.h>
 #include <ol3d_bit.h>
 #include <ol3d_uart.h>
+#include <ol3d_vector.h>
 
 struct ol3d_module_s {
     unsigned short  index;
