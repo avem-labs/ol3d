@@ -1,4 +1,4 @@
-#include "ol3d_core.h"
+#include <ol3d_core.h>
 
 static unsigned char ol3d_uart_init(void *conf);
 static unsigned int ol3d_uart_conf[] = {72, 115200};
