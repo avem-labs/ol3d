@@ -19,6 +19,36 @@ void ol3d_matrix_setUnit(ol3d_matrix_t a) {
     ol3d_matrix_copy(temp, a);
 }
 
+void ol3d_matrix_setTranslate(ol3d_matrix_t a, float x, float y, float z) {
+    ol3d_matrix_t temp = MATRIX_TRANSLATE(x, y, z);
+    ol3d_matrix_copy(temp, a);
+}
+
+void ol3d_matrix_setScale(ol3d_matrix_t a, float x, float y, float z) {
+    ol3d_matrix_t temp = MATRIX_SCALE(x, y, z);
+    ol3d_matrix_copy(temp, a);
+}
+
+void ol3d_matrix_setRotate(
+    ol3d_matrix_t a,
+    float angle,
+    unsigned char x,
+    unsigned char y,
+    unsigned char z
+) {
+    if(x) {
+        ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
+        ol3d_matrix_copy(temp, a);
+    } else if(y) {
+        ol3d_matrix_t temp = MATRIX_ROTATE_Y(angle);
+        ol3d_matrix_copy(temp, a);
+    } else if(z) {
+        ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
+        ol3d_matrix_copy(temp, a);
+    }
+}
+
+
 void ol3d_matrix_copy(ol3d_matrix_t a, ol3d_matrix_t b) {
     for(unsigned char i = 0; i < 0x10; i++) {
         b[i] = a[i];
