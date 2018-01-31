@@ -16,7 +16,7 @@ static unsigned char transpose4x4[] = {
 
 void ol3d_matrix_setUnit(ol3d_matrix_t a) {
     ol3d_matrix_t temp = MATRIX_UNIT;
-    ol3d_matrix_copy(a, temp);
+    ol3d_matrix_copy(temp, a);
 }
 
 void ol3d_matrix_copy(ol3d_matrix_t a, ol3d_matrix_t b) {
