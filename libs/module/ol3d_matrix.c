@@ -7,7 +7,7 @@
 //     12, 13, 14, 15
 // }
 
-static unsigned char transpose4x4[] = {
+static const unsigned char transpose4x4[] = {
     0, 4, 8, 12,
     1, 5, 9, 13,
     2, 6, 10, 14,
@@ -29,22 +29,18 @@ void ol3d_matrix_setScale(ol3d_matrix_t a, float x, float y, float z) {
     ol3d_matrix_copy(temp, a);
 }
 
-void ol3d_matrix_setRotate(
-    ol3d_matrix_t a,
-    float angle,
-    unsigned char x,
-    unsigned char y,
-    unsigned char z
-) {
-    if(x) {
-        ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
-        ol3d_matrix_copy(temp, a);
-    } else if(y) {
-        ol3d_matrix_t temp = MATRIX_ROTATE_Y(angle);
-        ol3d_matrix_copy(temp, a);
-    } else if(z) {
-        ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
-        ol3d_matrix_copy(temp, a);
+void ol3d_matrix_setRotate( ol3d_matrix_t a, float angle, unsigned char axis) {
+    if(angle) {
+        if(axis == M_AXIS_X) {
+            ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
+            ol3d_matrix_copy(temp, a);
+        } else if(axis == M_AXIS_Y) {
+            ol3d_matrix_t temp = MATRIX_ROTATE_Y(angle);
+            ol3d_matrix_copy(temp, a);
+        } else if(axis == M_AXIS_Z) {
+            ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
+            ol3d_matrix_copy(temp, a);
+        }
     }
 }
 
@@ -61,4 +57,50 @@ void ol3d_matrix_transpose(ol3d_matrix_t a) {
     for(unsigned char i = 0; i < 0x10; i++) {
         a[i] = temp[transpose4x4[i]];
     }
+}
+
+// 牺牲空间, 换取时间 - 代替(i/4)
+static const unsigned char rowOf[] = {
+    0, 0, 0, 0,
+    1, 1, 1, 1,
+    2, 2, 2, 2,
+    3, 3, 3, 3
+};
+
+float ol3d_matrix_multi_chunk(ol3d_matrix_t a, ol3d_matrix_t b, unsigned char pos) {
+    unsigned char row       = rowOf[pos];
+    unsigned char column    = transpose4x4[rowOf[transpose4x4[pos]]];
+    float sum = 0;
+    for(unsigned char i = 0; i < 4; i++) {
+        sum += a[row++] * b[transpose4x4[column++]];
+    }
+    return sum;
+}
+
+void ol3d_matrix_multiply(ol3d_matrix_t a, ol3d_matrix_t b, ol3d_matrix_t c) {
+    for(unsigned char i = 0; i < 0x10; i++) {
+        c[i] = ol3d_matrix_multi_chunk(a, b, i);
+    }
+}
+
+void ol3d_matrix_translate(ol3d_matrix_t a, float x, float y, float z) {
+    ol3d_matrix_t temp  = MATRIX_TRANSLATE(x, y, z); // operation
+    ol3d_matrix_t _a;
+    ol3d_matrix_copy(a, _a); // Backup
+    ol3d_matrix_multiply(temp, _a, a);
+}
+
+void ol3d_matrix_scale(ol3d_matrix_t a, float x, float y, float z) {
+    ol3d_matrix_t temp  = MATRIX_SCALE(x, y, z); // operation
+    ol3d_matrix_t _a;
+    ol3d_matrix_copy(a, _a); // Backup
+    ol3d_matrix_multiply(temp, _a, a);
+}
+
+void ol3d_matrix_rotate(ol3d_matrix_t a, float angle, unsigned char axis) {
+    ol3d_matrix_t temp;
+    ol3d_matrix_setRotate(temp, angle, axis);
+    ol3d_matrix_t _a;
+    ol3d_matrix_copy(a, _a); // Backup
+    ol3d_matrix_multiply(temp, _a, a);
 }
