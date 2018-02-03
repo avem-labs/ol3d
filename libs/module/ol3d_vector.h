@@ -14,7 +14,7 @@ extern ol3d_Vector3_t   ol3d_vector_add(ol3d_Vector3_t *a, ol3d_Vector3_t *b);
 extern ol3d_Vector3_t   ol3d_vector_subtract(ol3d_Vector3_t *a, ol3d_Vector3_t *b);
 extern ol3d_Vector3_t   ol3d_vector_multiply(ol3d_Vector3_t *a, float b);
 extern ol3d_Vector3_t   ol3d_vector_divide(ol3d_Vector3_t *a, float b);
-extern ol3d_Vector3_t ol3d_vector_cross(ol3d_Vector3_t *a, ol3d_Vector3_t *b, ol3d_Vector3_t *o);
+extern ol3d_Vector3_t   ol3d_vector_cross(ol3d_Vector3_t *a, ol3d_Vector3_t *b, ol3d_Vector3_t *o);
 
 
 #endif
