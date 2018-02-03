@@ -52,6 +52,9 @@ ol3d_Vector3_t ol3d_vector_divide(ol3d_Vector3_t *a, float b) {
 
 // cross product
 ol3d_Vector3_t ol3d_vector_cross(ol3d_Vector3_t *a, ol3d_Vector3_t *b, ol3d_Vector3_t *o) {
-    ol3d_Vector3_t temp;
-    return temp;
+    return (ol3d_Vector3_t) {
+        .x = a->y * b->z - a->z * b->y,
+        .y = a->z * b->x - a->x * b->z,
+        .z = a->x * b->y - a->y * b->x
+    };
 }
