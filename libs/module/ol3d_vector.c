@@ -9,9 +9,9 @@ ol3d_Vector3_t ol3d_vector_dot(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
     };
 }
 
-float ol3d_vector_length(ol3d_Vector3_t *a) {
+double ol3d_vector_length(ol3d_Vector3_t *a) {
     ol3d_Vector3_t temp = ol3d_vector_dot(a, a);
-    return (float)sqrt(temp.x + temp.y + temp.z);
+    return (double)sqrt(temp.x + temp.y + temp.z);
 }
 
 ol3d_Vector3_t ol3d_vector_normalize(ol3d_Vector3_t *a) {
