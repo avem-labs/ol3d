@@ -4,7 +4,7 @@
 // 4x4 matrix
 typedef float ol3d_matrix_t[16];
 
-#define PI          3.14
+#define PI          3.1415926535898
 #define R(angle)    ((angle) * PI/180)
 
 #define MATRIX_UNIT {\
