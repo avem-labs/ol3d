@@ -3,10 +3,10 @@
 void debug_buffer(ol3d_buffer_t target) {
 	for(unsigned int y = 0; y < BUFFER_SIZE; y++) {
 		for(unsigned int x = 0; x < BUFFER_SIZE; x++) {
-			if(target[x][y] == 0) {
-				uart_sendStr("__");
-			} else if(target[x][y] == 1){
+			if(target[x][y]) {
 				uart_sendStr("##");
+			} else {
+				uart_sendStr("__");
 			}
 		}
 		UART_CR();
@@ -40,7 +40,7 @@ int main() {
 	ol3d_draw_Triangle(render_buffer, &a, &b, &c, &a, &b, &c);
 
 	while(1) {
-		debug_buffer(render_buffer);
+		// debug_buffer(render_buffer);
 		// uart_sendStr("Hello World!\r\n");
 	}
 }

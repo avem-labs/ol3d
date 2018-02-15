@@ -58,6 +58,18 @@ void USART1_IRQHandler(void) {
 				uart_sendStr("Running bootloader...");
 				jump2ISP();
 				// NOTE: running bootloader
+            case '<':
+                for(unsigned int y = 0; y < BUFFER_SIZE; y++) {
+            		for(unsigned int x = 0; x < BUFFER_SIZE; x++) {
+            			if(render_buffer[x][y]) {
+            				uart_sendStr("1");
+            			} else {
+            				uart_sendStr("0");
+            			}
+                        uart_sendStr("@"); // End flag
+            		}
+            	}
+                uart_sendStr("\n\r"); // End flag
 			default:	//其它按键
 				break;
 		}
