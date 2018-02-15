@@ -1,7 +1,7 @@
 #include <ol3d_core.h>
 
 static unsigned char ol3d_uart_init(void *conf);
-static unsigned int ol3d_uart_conf[] = {72, 115200};
+static unsigned int ol3d_uart_conf[] = {72, 230400};
 
 ol3d_module_t ol3d_uart_module_st = {
     0,

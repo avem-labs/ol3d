@@ -41,7 +41,7 @@ tshow:
 		@echo "=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_"
 
 isp: /dev/cu.SLAB_USBtoUART main.bin
-	cat -u /dev/cu.SLAB_USBtoUART & stty -f /dev/cu.SLAB_USBtoUART 115200
+	cat -u /dev/cu.SLAB_USBtoUART & stty -f /dev/cu.SLAB_USBtoUART 230400
 	echo '>' > /dev/cu.SLAB_USBtoUART
 	pkill cat -u /dev/cu.SLAB_USBtoUART
 	make flash || make flash
@@ -52,7 +52,7 @@ dump:
 	$(OBJDUMP) -D main.elf > DUMP.s
 	open DUMP.s
 tty:
-	screen /dev/tty.SLAB_USBtoUART 115200
+	screen /dev/tty.SLAB_USBtoUART 230400
 dfu:
 	dfu-util -d 0483:df11 -c 1 -a 0 -s 0x08000000:leave -D main.bin
 install:
