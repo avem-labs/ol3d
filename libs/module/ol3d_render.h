@@ -2,14 +2,14 @@
 #define _OL3D_RENDER_H_
 
 // Screen
-#define BUFFER_SIZE             16
+#define BUFFER_SIZE             128
 
 // Format : RRRR RGGG GGGB BBBB
 #define COLOR_CHANNEL_RANGE_R   31
 #define COLOR_CHANNEL_RANGE_B   63
 #define COLOR_CHANNEL_RANGE_G   31
 
-typedef float ol3d_pixel_t;
+typedef short ol3d_pixel_t;
 
 typedef ol3d_pixel_t ol3d_buffer_t[BUFFER_SIZE][BUFFER_SIZE];
 
