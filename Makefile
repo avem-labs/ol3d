@@ -40,7 +40,7 @@ tshow:
 		@echo "=🍺====>> optimize settings: $(InfoTextLib), $(InfoTextSrc)"
 		@echo "=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_=_"
 
-isp: /dev/cu.SLAB_USBtoUART main.bin
+isp: /dev/cu.SLAB_USBtoUART all
 	cat -u /dev/cu.SLAB_USBtoUART & stty -f /dev/cu.SLAB_USBtoUART 230400
 	echo '>' > /dev/cu.SLAB_USBtoUART
 	pkill cat -u /dev/cu.SLAB_USBtoUART

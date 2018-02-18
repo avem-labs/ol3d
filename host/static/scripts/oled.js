@@ -12,9 +12,9 @@ function UnitTest() {
 		console.log(json);
 		for(let i in json) {
 			if(json[i] == '0') {
-				$(".screen").children().eq(i).css("background-color", "black");
+				$(".screen").children().eq(i).css("background-color", "#ededed");
 			} else {
-				$(".screen").children().eq(i).css("background-color", "red");
+				$(".screen").children().eq(i).css("background-color", "#2196F3");
 
 			}
 		}
@@ -26,8 +26,8 @@ function UnitTest() {
 }
 
 $(() => {
-	for(let i = 0; i < 128*128; i++) {
+	for(let i = 0; i < 64*64; i++) {
 		$(".screen").append('<div></div>');
 	}
-	setInterval(UnitTest, 100);
+	setInterval(UnitTest, 1000);
 });

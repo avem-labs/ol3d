@@ -2,7 +2,7 @@
 #define _OL3D_RENDER_H_
 
 // Screen
-#define BUFFER_SIZE             128
+#define BUFFER_SIZE             64
 
 // Format : RRRR RGGG GGGB BBBB
 #define COLOR_CHANNEL_RANGE_R   31

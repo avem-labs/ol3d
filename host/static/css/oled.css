@@ -16,7 +16,7 @@ body {
 .screen {
     width: 768px;
     height: 768px;
-    background-color: #ededed;
+    /* background-color: #ededed; */
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -24,8 +24,8 @@ body {
 }
 
 .screen > * {
-    width: 6px;
-    height: 6px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background-color: white;
     display: flex;

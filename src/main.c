@@ -27,8 +27,8 @@ int main() {
 		.z = 0.0
 	};
 	ol3d_Vector3_t b = {
-		.x = 0.0,
-		.y = -1.0,
+		.x = -0.4,
+		.y = -0.6,
 		.z = 0.0
 	};
 	ol3d_Vector3_t c = {
