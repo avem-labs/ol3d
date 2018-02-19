@@ -9,6 +9,7 @@ ol3d_buffer_t *render_target = &render_buffer;
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
 #define isLeft(_a, _b, _p)  (((_b->x-_a->x) * (_p->y-_a->y) - (_b->y-_a->y) * (_p->x-_a->x))>0)
 #define COORD(x)            (BUFFER_SIZE * ((x) + 1.0) * 0.5)
+
 static unsigned char inTriangle(
     ol3d_Vector3_t *a,
     ol3d_Vector3_t *b,
@@ -37,31 +38,46 @@ void ol3d_draw_Triangle(
     ol3d_Vector3_t *color_b,
     ol3d_Vector3_t *color_c
 ) {
-    a->x = COORD(a->x);
-    a->y = COORD(-a->y);
-    a->z = COORD(a->z);
+    // Screen space coords
+    ol3d_Vector3_t ss_A = {
+        .x = COORD(a->x),
+        .y = COORD(-a->y),
+        .z = COORD(a->z)
+    };
 
-    b->x = COORD(b->x);
-    b->y = COORD(-b->y);
-    b->z = COORD(b->z);
+    ol3d_Vector3_t ss_B = {
+        .x = COORD(b->x),
+        .y = COORD(-b->y),
+        .z = COORD(b->z)
+    };
 
-    c->x = COORD(c->x);
-    c->y = COORD(-c->y);
-    c->z = COORD(c->z);
+    ol3d_Vector3_t ss_C = {
+        .x = COORD(c->x),
+        .y = COORD(-c->y),
+        .z = COORD(c->z)
+    };
 
     unsigned int minX, minY, maxX, maxY;
-    minX = (unsigned int)(AABB_MIN(a->x, b->x, c->x));
-    maxX = (unsigned int)(AABB_MAX(a->x, b->x, c->x));
-    minY = (unsigned int)(AABB_MIN(a->y, b->y, c->y));
-    maxY = (unsigned int)(AABB_MAX(a->y, b->y, c->y));
+    minX = (unsigned int)(AABB_MIN(ss_A.x, ss_B.x, ss_C.x));
+    maxX = (unsigned int)(AABB_MAX(ss_A.x, ss_B.x, ss_C.x));
+    minY = (unsigned int)(AABB_MIN(ss_A.y, ss_B.y, ss_C.y));
+    maxY = (unsigned int)(AABB_MAX(ss_A.y, ss_B.y, ss_C.y));
 
 
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
-            if(inTriangle(a, b, c, x, y)) {
+            if(inTriangle(&ss_A, &ss_B, &ss_C, x, y)) {
                 target[x][y] = 1;
             }
         }
     }
 
+}
+
+void ol3d_clean_buffer(ol3d_buffer_t target) {
+    for(unsigned int y = 0; y < BUFFER_SIZE; y++) {
+		for(unsigned int x = 0; x < BUFFER_SIZE; x++) {
+			target[x][y] = 0;
+		}
+	}
 }

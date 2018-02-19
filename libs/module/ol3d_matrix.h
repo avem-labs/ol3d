@@ -29,21 +29,21 @@ typedef float ol3d_matrix_t[16];
 
 #define MATRIX_ROTATE_X(a) {\
     1, 0, 0, 0,\
-    0, cos(a), sin(a), 0,\
-    0, -sin(a), cos(a), 0,\
+    0, cos(R(a)), sin(R(a)), 0,\
+    0, -sin(R(a)), cos(R(a)), 0,\
     0, 0, 0, 1 \
 }
 
 #define MATRIX_ROTATE_Y(a) {\
-    cos(a), 0, sin(a), 0,\
+    cos(R(a)), 0, sin(R(a)), 0,\
     0, 1, 0, 0,\
-    -sin(a), 0, cos(a), 0,\
+    -sin(R(a)), 0, cos(R(a)), 0,\
     0, 0, 0, 1 \
 }
 
 #define MATRIX_ROTATE_Z(a) {\
-    cos(a), sin(a), 0, 0,\
-    -sin(a), cos(a), 0, 0,\
+    cos(R(a)), sin(R(a)), 0, 0,\
+    -sin(R(a)), cos(R(a)), 0, 0,\
     0, 0, 1, 0,\
     0, 0, 0, 1 \
 }
@@ -63,5 +63,6 @@ extern void     ol3d_matrix_multiply(ol3d_matrix_t a, ol3d_matrix_t b, ol3d_matr
 extern void     ol3d_matrix_translate(ol3d_matrix_t a, float x, float y, float z);
 extern void     ol3d_matrix_scale(ol3d_matrix_t a, float x, float y, float z);
 extern void     ol3d_matrix_rotate(ol3d_matrix_t a, float angle, unsigned char axis);
+extern void     ol3d_matrix_multi_v3(ol3d_Vector3_t *a, ol3d_matrix_t b);
 
 #endif

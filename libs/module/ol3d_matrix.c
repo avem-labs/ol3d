@@ -104,3 +104,14 @@ void ol3d_matrix_rotate(ol3d_matrix_t a, float angle, unsigned char axis) {
     ol3d_matrix_copy(a, _a); // Backup
     ol3d_matrix_multiply(temp, _a, a);
 }
+
+void ol3d_matrix_multi_v3(ol3d_Vector3_t *a, ol3d_matrix_t b) {
+    ol3d_matrix_t temp = {a->x, a->y, a->z, 1};
+    ol3d_matrix_t result;
+    for(unsigned char i = 0; i < 4; i++) {
+        result[i] = ol3d_matrix_multi_chunk(temp, b, i);
+    }
+    a->x = result[0];
+    a->y = result[1];
+    a->z = result[2];
+}

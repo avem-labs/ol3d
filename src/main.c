@@ -37,10 +37,17 @@ int main() {
 		.z = 0.0
 	};
 
-	ol3d_draw_Triangle(render_buffer, &a, &b, &c, &a, &b, &c);
+	ol3d_matrix_t t = MATRIX_ROTATE_Z(10);
 
+
+	// ol3d_draw_Triangle(render_buffer, &a, &b, &c, &a, &b, &c);
 	while(1) {
+		ol3d_draw_Triangle(render_buffer, &a, &b, &c, &a, &b, &c);
 		// debug_buffer(render_buffer);
-		// uart_sendStr("Hello World!\r\n");
+		ol3d_clean_buffer(render_buffer);
+		ol3d_matrix_multi_v3(&a, t);
+		ol3d_matrix_multi_v3(&b, t);
+		ol3d_matrix_multi_v3(&c, t);
+		delay_ms(1000);
 	}
 }
