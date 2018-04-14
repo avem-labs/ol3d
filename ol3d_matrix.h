@@ -55,8 +55,10 @@ typedef float ol3d_matrix_t[16];
 extern void     ol3d_matrix_setUnit(ol3d_matrix_t a);
 extern void     ol3d_matrix_setTranslate(ol3d_matrix_t a, float x, float y, float z);
 extern void     ol3d_matrix_setScale(ol3d_matrix_t a, float x, float y, float z);
-extern void     ol3d_matrix_setRotate( ol3d_matrix_t a, float angle, unsigned char axis);
+extern void     ol3d_matrix_setRotate(ol3d_matrix_t a, float angle, unsigned char axis);
+extern void     ol3d_matrix_setPerspective(ol3d_matrix_t a, double fov, double aspect, double near, double far);
 extern void     ol3d_matrix_copy(ol3d_matrix_t a, ol3d_matrix_t b);
+
 extern void     ol3d_matrix_transpose(ol3d_matrix_t a);
 extern float    ol3d_matrix_multi_chunk(ol3d_matrix_t a, ol3d_matrix_t b, unsigned char pos);
 extern void     ol3d_matrix_multiply(ol3d_matrix_t a, ol3d_matrix_t b, ol3d_matrix_t c);

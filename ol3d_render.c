@@ -58,23 +58,32 @@ void ol3d_draw_Triangle(
     const ol3d_Vector3_t *color_b,
     const ol3d_Vector3_t *color_c
 ) {
+    ol3d_matrix_t p;
+    ol3d_matrix_setPerspective(p, 30, 1.5, 1, 100);
+    ol3d_Vector3_t _a = *a;
+    ol3d_Vector3_t _b = *b;
+    ol3d_Vector3_t _c = *c;
+    ol3d_matrix_multi_v3(&_a, p);
+    ol3d_matrix_multi_v3(&_b, p);
+    ol3d_matrix_multi_v3(&_c, p);
+
     // Screen space coords
     ol3d_Vector3_t ss_A = {
-        .x = COORD(a->x),
-        .y = COORD(-a->y),
-        .z = COORD(a->z)
+        .x = COORD(_a.x),
+        .y = COORD(-_a.y),
+        .z = COORD(_a.z)
     };
 
     ol3d_Vector3_t ss_B = {
-        .x = COORD(b->x),
-        .y = COORD(-b->y),
-        .z = COORD(b->z)
+        .x = COORD(_b.x),
+        .y = COORD(-_b.y),
+        .z = COORD(_b.z)
     };
 
     ol3d_Vector3_t ss_C = {
-        .x = COORD(c->x),
-        .y = COORD(-c->y),
-        .z = COORD(c->z)
+        .x = COORD(_c.x),
+        .y = COORD(-_c.y),
+        .z = COORD(_c.z)
     };
 
     unsigned int minX, minY, maxX, maxY;

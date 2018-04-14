@@ -29,7 +29,7 @@ void ol3d_matrix_setScale(ol3d_matrix_t a, float x, float y, float z) {
     ol3d_matrix_copy(temp, a);
 }
 
-void ol3d_matrix_setRotate( ol3d_matrix_t a, float angle, unsigned char axis) {
+void ol3d_matrix_setRotate(ol3d_matrix_t a, float angle, unsigned char axis) {
     if(angle) {
         if(axis == M_AXIS_X) {
             ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
@@ -42,6 +42,18 @@ void ol3d_matrix_setRotate( ol3d_matrix_t a, float angle, unsigned char axis) {
             ol3d_matrix_copy(temp, a);
         }
     }
+}
+
+void ol3d_matrix_setPerspective(ol3d_matrix_t a, double fov, double aspect, double near, double far) {
+    double cot  = tan(fov/2);
+    double rd   = 1 / (far - near);
+    ol3d_matrix_t p = {
+        cot/aspect, 0, 0, 0,
+        0, cot, 0, 0,
+        0, 0, -(far+near)*rd, -1,
+        0, 0, -2*far*near*rd, 0
+    };
+    ol3d_matrix_copy(p, a);
 }
 
 
