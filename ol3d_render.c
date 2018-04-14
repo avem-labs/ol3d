@@ -1,14 +1,12 @@
 #include "ol3d_core.h"
 
-
-ol3d_buffer_t render_buffer = {};
-
-ol3d_buffer_t *render_target = &render_buffer;
+unsigned char render_buffer[BUFFER_SIZE] = {};
+unsigned char *render_target = &render_buffer;
 
 #define AABB_MIN(x, y, z)   (fmin((x), fmin((y), (z))))
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
 #define isLeft(_a, _b, _p)  (((_b->x-_a->x) * (_p->y-_a->y) - (_b->y-_a->y) * (_p->x-_a->x))>0)
-#define COORD(x)            (BUFFER_SIZE * ((x) + 1.0) * 0.5)
+#define COORD(x)            (SCREEN_SIZE * ((x) + 1.0) * 0.5)
 
 static unsigned char inTriangle(
     ol3d_Vector3_t *a,
@@ -29,8 +27,30 @@ static unsigned char inTriangle(
     return 1;
 }
 
+void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y) {
+    // Color conversion
+    ol3d_Vector3_t rgb = {
+        .x = COLOR_CHANNEL_RANGE_R,
+        .y = COLOR_CHANNEL_RANGE_G,
+        .z = COLOR_CHANNEL_RANGE_B
+    };
+    ol3d_Vector3_t raw = ol3d_vector_dot(color, &rgb);
+
+    // RRRRRGGG
+    // GGGBBBBB
+    unsigned char h = (unsigned char)raw.x<<3 | (unsigned char)raw.y>>3;
+    unsigned char l = (unsigned char)raw.y<<3 | (unsigned char)raw.z;
+
+    // Override pixel
+    if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
+        unsigned int offset = y * SCREEN_SIZE * PIXEL_SIZE + x * PIXEL_SIZE;
+        target[offset]      = h;
+        target[offset+1]    = l;
+    }
+}
+
 void ol3d_draw_Triangle(
-    ol3d_buffer_t target,
+    unsigned char *target,
     ol3d_Vector3_t *a,
     ol3d_Vector3_t *b,
     ol3d_Vector3_t *c,
@@ -63,22 +83,23 @@ void ol3d_draw_Triangle(
     minY = (unsigned int)(AABB_MIN(ss_A.y, ss_B.y, ss_C.y));
     maxY = (unsigned int)(AABB_MAX(ss_A.y, ss_B.y, ss_C.y));
 
-
+    // Vertex Shader
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
             if(inTriangle(&ss_A, &ss_B, &ss_C, x, y)) {
-                // Shader
-                target[x][y] = 0xFF;
+                // Fragment Shader
+                ol3d_draw_Pixel(target, color_a, x, y);
             }
         }
     }
 
 }
 
-void ol3d_clean_buffer(ol3d_buffer_t target) {
-    for(unsigned int y = 0; y < BUFFER_SIZE; y++) {
-		for(unsigned int x = 0; x < BUFFER_SIZE; x++) {
-			target[x][y] = 0;
+void ol3d_clean_buffer(unsigned char *target) {
+    for(unsigned int y = 0; y < SCREEN_SIZE; y++) {
+		for(unsigned int x = 0; x < SCREEN_SIZE; x++) {
+			*target++ = 0;
+			*target++ = 0;
 		}
 	}
 }
