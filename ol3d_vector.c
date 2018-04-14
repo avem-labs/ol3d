@@ -1,7 +1,7 @@
 #include "ol3d_core.h"
 
 // dot product
-ol3d_Vector3_t ol3d_vector_dot(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
+ol3d_Vector3_t ol3d_vector_dot(const ol3d_Vector3_t *a, const ol3d_Vector3_t *b) {
     return (ol3d_Vector3_t){
         .x = a->x * b->x,
         .y = a->y * b->y,
@@ -9,16 +9,16 @@ ol3d_Vector3_t ol3d_vector_dot(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
     };
 }
 
-double ol3d_vector_length(ol3d_Vector3_t *a) {
+double ol3d_vector_length(const ol3d_Vector3_t *a) {
     ol3d_Vector3_t temp = ol3d_vector_dot(a, a);
     return (double)sqrt(temp.x + temp.y + temp.z);
 }
 
-ol3d_Vector3_t ol3d_vector_normalize(ol3d_Vector3_t *a) {
+ol3d_Vector3_t ol3d_vector_normalize(const ol3d_Vector3_t *a) {
     return ol3d_vector_divide(a, ol3d_vector_length(a));
 }
 
-ol3d_Vector3_t ol3d_vector_add(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
+ol3d_Vector3_t ol3d_vector_add(const ol3d_Vector3_t *a, const ol3d_Vector3_t *b) {
     return (ol3d_Vector3_t) {
         .x = a->x + b->x,
         .y = a->y + b->y,
@@ -26,7 +26,7 @@ ol3d_Vector3_t ol3d_vector_add(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
     };
 }
 
-ol3d_Vector3_t ol3d_vector_subtract(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
+ol3d_Vector3_t ol3d_vector_subtract(const ol3d_Vector3_t *a, const ol3d_Vector3_t *b) {
     return (ol3d_Vector3_t) {
         .x = a->x - b->x,
         .y = a->y - b->y,
@@ -34,7 +34,7 @@ ol3d_Vector3_t ol3d_vector_subtract(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
     };
 }
 
-ol3d_Vector3_t ol3d_vector_multiply(ol3d_Vector3_t *a, float b) {
+ol3d_Vector3_t ol3d_vector_multiply(const ol3d_Vector3_t *a, float b) {
     return (ol3d_Vector3_t) {
         .x = a->x * b,
         .y = a->y * b,
@@ -42,7 +42,7 @@ ol3d_Vector3_t ol3d_vector_multiply(ol3d_Vector3_t *a, float b) {
     };
 }
 
-ol3d_Vector3_t ol3d_vector_divide(ol3d_Vector3_t *a, float b) {
+ol3d_Vector3_t ol3d_vector_divide(const ol3d_Vector3_t *a, float b) {
     return (ol3d_Vector3_t) {
         .x = a->x / b,
         .y = a->y / b,
@@ -51,7 +51,7 @@ ol3d_Vector3_t ol3d_vector_divide(ol3d_Vector3_t *a, float b) {
 }
 
 // cross product
-ol3d_Vector3_t ol3d_vector_cross(ol3d_Vector3_t *a, ol3d_Vector3_t *b) {
+ol3d_Vector3_t ol3d_vector_cross(const ol3d_Vector3_t *a, const ol3d_Vector3_t *b) {
     return (ol3d_Vector3_t) {
         .x = a->y * b->z - a->z * b->y,
         .y = a->z * b->x - a->x * b->z,
