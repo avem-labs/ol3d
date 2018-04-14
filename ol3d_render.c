@@ -51,12 +51,12 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
 
 void ol3d_draw_Triangle(
     unsigned char *target,
-    ol3d_Vector3_t *a,
-    ol3d_Vector3_t *b,
-    ol3d_Vector3_t *c,
-    ol3d_Vector3_t *color_a,
-    ol3d_Vector3_t *color_b,
-    ol3d_Vector3_t *color_c
+    const ol3d_Vector3_t *a,
+    const ol3d_Vector3_t *b,
+    const ol3d_Vector3_t *c,
+    const ol3d_Vector3_t *color_a,
+    const ol3d_Vector3_t *color_b,
+    const ol3d_Vector3_t *color_c
 ) {
     // Screen space coords
     ol3d_Vector3_t ss_A = {
