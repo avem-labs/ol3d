@@ -65,7 +65,7 @@ void ol3d_matrix_copy(ol3d_matrix_t a, ol3d_matrix_t b) {
 
 void ol3d_matrix_transpose(ol3d_matrix_t a) {
     ol3d_matrix_t temp;
-    ol3d_matrix_copy(a, temp);
+    ol3d_matrix_copy(temp, a);
     for(unsigned char i = 0; i < 0x10; i++) {
         a[i] = temp[transpose4x4[i]];
     }
@@ -80,7 +80,7 @@ static const unsigned char rowOf[] = {
 };
 
 float ol3d_matrix_multi_chunk(ol3d_matrix_t a, ol3d_matrix_t b, unsigned char pos) {
-    unsigned char row       = rowOf[pos];
+    unsigned char row       = transpose4x4[rowOf[pos]];
     unsigned char column    = transpose4x4[rowOf[transpose4x4[pos]]];
     float sum = 0;
     for(unsigned char i = 0; i < 4; i++) {
@@ -99,14 +99,14 @@ void ol3d_matrix_translate(ol3d_matrix_t a, float x, float y, float z) {
     ol3d_matrix_t temp  = MATRIX_TRANSLATE(x, y, z); // operation
     ol3d_matrix_t _a;
     ol3d_matrix_copy(a, _a); // Backup
-    ol3d_matrix_multiply(temp, _a, a);
+    ol3d_matrix_multiply(_a, temp, a);
 }
 
 void ol3d_matrix_scale(ol3d_matrix_t a, float x, float y, float z) {
     ol3d_matrix_t temp  = MATRIX_SCALE(x, y, z); // operation
     ol3d_matrix_t _a;
     ol3d_matrix_copy(a, _a); // Backup
-    ol3d_matrix_multiply(temp, _a, a);
+    ol3d_matrix_multiply(_a, temp, a);
 }
 
 void ol3d_matrix_rotate(ol3d_matrix_t a, float angle, unsigned char axis) {
@@ -114,7 +114,7 @@ void ol3d_matrix_rotate(ol3d_matrix_t a, float angle, unsigned char axis) {
     ol3d_matrix_setRotate(temp, angle, axis);
     ol3d_matrix_t _a;
     ol3d_matrix_copy(a, _a); // Backup
-    ol3d_matrix_multiply(temp, _a, a);
+    ol3d_matrix_multiply(_a, temp, a);
 }
 
 void ol3d_matrix_multi_v3(ol3d_Vector3_t *a, ol3d_matrix_t b) {
