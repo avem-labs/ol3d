@@ -59,7 +59,7 @@ void ol3d_draw_Triangle(
     const ol3d_Vector3_t *color_c
 ) {
     ol3d_matrix_t p;
-    ol3d_matrix_setPerspective(p, 30, 1.5, 1, 100);
+    ol3d_matrix_setPerspective(p, 30.4, 1, -1, 1);
     ol3d_Vector3_t _a = *a;
     ol3d_Vector3_t _b = *b;
     ol3d_Vector3_t _c = *c;

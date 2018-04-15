@@ -38,7 +38,7 @@ void ol3d_matrix_setRotate(ol3d_matrix_t a, float angle, unsigned char axis) {
             ol3d_matrix_t temp = MATRIX_ROTATE_Y(angle);
             ol3d_matrix_copy(temp, a);
         } else if(axis == M_AXIS_Z) {
-            ol3d_matrix_t temp = MATRIX_ROTATE_X(angle);
+            ol3d_matrix_t temp = MATRIX_ROTATE_Z(angle);
             ol3d_matrix_copy(temp, a);
         }
     }
