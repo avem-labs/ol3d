@@ -70,19 +70,19 @@ void ol3d_draw_Triangle(
     // Screen space coords
     ol3d_Vector3_t ss_A = {
         .x = COORD(_a.x),
-        .y = COORD(-_a.y),
+        .y = COORD(_a.y),
         .z = COORD(_a.z)
     };
 
     ol3d_Vector3_t ss_B = {
         .x = COORD(_b.x),
-        .y = COORD(-_b.y),
+        .y = COORD(_b.y),
         .z = COORD(_b.z)
     };
 
     ol3d_Vector3_t ss_C = {
         .x = COORD(_c.x),
-        .y = COORD(-_c.y),
+        .y = COORD(_c.y),
         .z = COORD(_c.z)
     };
 
