@@ -34,7 +34,7 @@ ol3d_Vector3_t ol3d_vector_subtract(const ol3d_Vector3_t *a, const ol3d_Vector3_
     };
 }
 
-ol3d_Vector3_t ol3d_vector_multiply(const ol3d_Vector3_t *a, float b) {
+ol3d_Vector3_t ol3d_vector_multiply(const ol3d_Vector3_t *a, double b) {
     return (ol3d_Vector3_t) {
         .x = a->x * b,
         .y = a->y * b,
@@ -42,7 +42,7 @@ ol3d_Vector3_t ol3d_vector_multiply(const ol3d_Vector3_t *a, float b) {
     };
 }
 
-ol3d_Vector3_t ol3d_vector_divide(const ol3d_Vector3_t *a, float b) {
+ol3d_Vector3_t ol3d_vector_divide(const ol3d_Vector3_t *a, double b) {
     return (ol3d_Vector3_t) {
         .x = a->x / b,
         .y = a->y / b,

@@ -6,7 +6,7 @@ unsigned char *render_target = &render_buffer;
 #define AABB_MIN(x, y, z)   (fmin((x), fmin((y), (z))))
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
 #define isLeft(_a, _b, _p)  (((_b->x-_a->x) * (_p->y-_a->y) - (_b->y-_a->y) * (_p->x-_a->x))>0)
-#define COORD(x)            (SCREEN_SIZE * ((x) + 1.0) * 0.5)
+#define COORD(x)            (SCREEN_SIZE * ((x)*0.5 + 0.5))
 
 static unsigned char inTriangle(
     ol3d_Vector3_t *a,
