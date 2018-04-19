@@ -123,7 +123,7 @@ void ol3d_matrix_multi_v3(ol3d_Vector3_t *a, ol3d_matrix_t b) {
     for(unsigned char i = 0; i < 4; i++) {
         result[i] = ol3d_matrix_multi_chunk(temp, b, i);
     }
-    a->x = result[0];
-    a->y = result[1];
-    a->z = result[2];
+    a->x = result[0]/result[3];
+    a->y = result[1]/result[3];
+    a->z = result[2]/result[3];
 }

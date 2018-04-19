@@ -58,14 +58,22 @@ void ol3d_draw_Triangle(
     const ol3d_Vector3_t *color_b,
     const ol3d_Vector3_t *color_c
 ) {
-    ol3d_matrix_t p;
-    ol3d_matrix_setPerspective(p, 30.4, 1, -1, 1);
+
     ol3d_Vector3_t _a = *a;
     ol3d_Vector3_t _b = *b;
     ol3d_Vector3_t _c = *c;
+    ol3d_matrix_t p = MATRIX_UNIT;
+    ol3d_matrix_setPerspective(p, 45, 1, 1, 90);
+    ol3d_matrix_t m;
+    ol3d_matrix_setTranslate(m, 0, 0, 1.2);
+    ol3d_matrix_multi_v3(&_a, m);
+    ol3d_matrix_multi_v3(&_b, m);
+    ol3d_matrix_multi_v3(&_c, m);
+
     ol3d_matrix_multi_v3(&_a, p);
     ol3d_matrix_multi_v3(&_b, p);
     ol3d_matrix_multi_v3(&_c, p);
+
 
     // Screen space coords
     ol3d_Vector3_t ss_A = {
