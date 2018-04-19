@@ -49,16 +49,16 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
     }
 }
 
+// Flat Shading
 void ol3d_draw_Triangle(
     unsigned char *target,
     const ol3d_Vector3_t *a,
     const ol3d_Vector3_t *b,
     const ol3d_Vector3_t *c,
-    const ol3d_Vector3_t *color_a,
-    const ol3d_Vector3_t *color_b,
-    const ol3d_Vector3_t *color_c
+    const ol3d_Vector3_t *color
 ) {
 
+    // Vertex Shader
     ol3d_Vector3_t _a = *a;
     ol3d_Vector3_t _b = *b;
     ol3d_Vector3_t _c = *c;
@@ -100,12 +100,11 @@ void ol3d_draw_Triangle(
     minY = (unsigned int)(AABB_MIN(ss_A.y, ss_B.y, ss_C.y));
     maxY = (unsigned int)(AABB_MAX(ss_A.y, ss_B.y, ss_C.y));
 
-    // Vertex Shader
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
             if(inTriangle(&ss_A, &ss_B, &ss_C, x, y)) {
                 // Fragment Shader
-                ol3d_draw_Pixel(target, color_a, x, y);
+                ol3d_draw_Pixel(target, color, x, y);
             }
         }
     }
