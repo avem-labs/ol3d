@@ -3,29 +3,14 @@
 unsigned char render_buffer[BUFFER_SIZE] = {};
 unsigned char *render_target = &render_buffer;
 
+// AABB box
 #define AABB_MIN(x, y, z)   (fmin((x), fmin((y), (z))))
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
-#define isLeft(_a, _b, _p)  (((_b->x-_a->x) * (_p->y-_a->y) - (_b->y-_a->y) * (_p->x-_a->x))>0)
+
+#define isLeft(_a, _b, _px, _py)    (((_b.x-_a.x) * (_py-_a.y) - (_b.y-_a.y) * (_px-_a.x))>0)
+#define inTriangle(a, b, c, x, y)   ((isLeft(a, b, x, y) == isLeft(b, c, x, y)) && (isLeft(a, b, x, y) == isLeft(c, a, x, y)))
+
 #define COORD(x)            (SCREEN_SIZE * ((x)*0.5 + 0.5))
-
-static unsigned char inTriangle(
-    ol3d_Vector3_t *a,
-    ol3d_Vector3_t *b,
-    ol3d_Vector3_t *c,
-    unsigned int    x,
-    unsigned int    y
-) {
-    ol3d_Vector3_t p = {
-        .x = x,
-        .y = y
-    };
-
-    if(isLeft(a, b, (&p)) != isLeft(b, c, (&p)))
-        return 0;
-    if(isLeft(a, b, (&p)) != isLeft(c, a, (&p)))
-        return 0;
-    return 1;
-}
 
 void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y) {
     // Color conversion
@@ -63,9 +48,9 @@ void ol3d_draw_Triangle(
     ol3d_Vector3_t _b = *b;
     ol3d_Vector3_t _c = *c;
     ol3d_matrix_t p = MATRIX_UNIT;
-    ol3d_matrix_setPerspective(p, 45, 1, 1, 90);
+    ol3d_matrix_setPerspective(p, 15, 1, 1, 100);
     ol3d_matrix_t m;
-    ol3d_matrix_setTranslate(m, 0, 0, 1.2);
+    ol3d_matrix_setTranslate(m, 0, 0, 2);
     ol3d_matrix_multi_v3(&_a, m);
     ol3d_matrix_multi_v3(&_b, m);
     ol3d_matrix_multi_v3(&_c, m);
@@ -102,7 +87,7 @@ void ol3d_draw_Triangle(
 
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
-            if(inTriangle(&ss_A, &ss_B, &ss_C, x, y)) {
+            if(inTriangle(ss_A, ss_B, ss_C, x, y)) {
                 // Fragment Shader
                 ol3d_draw_Pixel(target, color, x, y);
             }
