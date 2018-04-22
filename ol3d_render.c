@@ -22,9 +22,9 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
     // Override pixel
     if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
         unsigned int offset = y * SCREEN_SIZE * PIXEL_SIZE + x * PIXEL_SIZE;
-        target[offset]      = raw.x;
-        target[offset+1]    = raw.y;
-        target[offset+2]    = raw.z;
+        target[offset]      |= (unsigned char)raw.x;
+        target[offset+1]    |= (unsigned char)raw.y;
+        target[offset+2]    |= (unsigned char)raw.z;
     }
 }
 
