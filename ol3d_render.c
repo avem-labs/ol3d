@@ -1,8 +1,6 @@
 #include "ol3d_core.h"
 
-unsigned char render_buffer[BUFFER_SIZE] = {};
-unsigned char *render_target = &render_buffer;
-
+static double ol3d_render_Zbuffer[SCREEN_SIZE*SCREEN_SIZE] = {};
 // AABB box
 #define AABB_MIN(x, y, z)   (fmin((x), fmin((y), (z))))
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
@@ -21,16 +19,12 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
     };
     ol3d_Vector3_t raw = ol3d_vector_dot(color, &rgb);
 
-    // RRRRRGGG
-    // GGGBBBBB
-    unsigned char h = (unsigned char)raw.x<<3 | (unsigned char)raw.y>>3;
-    unsigned char l = (unsigned char)raw.y<<3 | (unsigned char)raw.z;
-
     // Override pixel
     if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
         unsigned int offset = y * SCREEN_SIZE * PIXEL_SIZE + x * PIXEL_SIZE;
-        target[offset]      = h;
-        target[offset+1]    = l;
+        target[offset]      = raw.x;
+        target[offset+1]    = raw.y;
+        target[offset+2]    = raw.z;
     }
 }
 
@@ -42,41 +36,23 @@ void ol3d_draw_Triangle(
     const ol3d_Vector3_t *c,
     const ol3d_Vector3_t *color
 ) {
-
-    // Vertex Shader
-    ol3d_Vector3_t _a = *a;
-    ol3d_Vector3_t _b = *b;
-    ol3d_Vector3_t _c = *c;
-    ol3d_matrix_t p = MATRIX_UNIT;
-    ol3d_matrix_setPerspective(p, 15, 1, 1, 100);
-    ol3d_matrix_t m;
-    ol3d_matrix_setTranslate(m, 0, 0, 2);
-    ol3d_matrix_multi_v3(&_a, m);
-    ol3d_matrix_multi_v3(&_b, m);
-    ol3d_matrix_multi_v3(&_c, m);
-
-    ol3d_matrix_multi_v3(&_a, p);
-    ol3d_matrix_multi_v3(&_b, p);
-    ol3d_matrix_multi_v3(&_c, p);
-
-
     // Screen space coords
     ol3d_Vector3_t ss_A = {
-        .x = COORD(_a.x),
-        .y = COORD(_a.y),
-        .z = COORD(_a.z)
+        .x = COORD(a->x),
+        .y = COORD(a->y),
+        .z = COORD(a->z)
     };
 
     ol3d_Vector3_t ss_B = {
-        .x = COORD(_b.x),
-        .y = COORD(_b.y),
-        .z = COORD(_b.z)
+        .x = COORD(b->x),
+        .y = COORD(b->y),
+        .z = COORD(b->z)
     };
 
     ol3d_Vector3_t ss_C = {
-        .x = COORD(_c.x),
-        .y = COORD(_c.y),
-        .z = COORD(_c.z)
+        .x = COORD(c->x),
+        .y = COORD(c->y),
+        .z = COORD(c->z)
     };
 
     unsigned int minX, minY, maxX, maxY;
@@ -90,6 +66,8 @@ void ol3d_draw_Triangle(
             if(inTriangle(ss_A, ss_B, ss_C, x, y)) {
                 // Fragment Shader
                 ol3d_draw_Pixel(target, color, x, y);
+                // depth buffer
+                // ol3d_render_zbuffer[y*BUFFER_SIZE+x] =
             }
         }
     }
@@ -101,6 +79,25 @@ void ol3d_clean_buffer(unsigned char *target) {
 		for(unsigned int x = 0; x < SCREEN_SIZE; x++) {
 			*target++ = 0;
 			*target++ = 0;
+			*target++ = 0;
 		}
 	}
+}
+
+void ol3d_draw_Element(unsigned char *target, double *v, double *color, unsigned int len, ol3d_matrix_t vs) {
+    while(len--) {
+        ol3d_Vector3_t a = {v[0], v[1], v[2]};
+        ol3d_matrix_multi_v3(&a, vs);
+        v += 3;
+        ol3d_Vector3_t b = {v[0], v[1], v[2]};
+        ol3d_matrix_multi_v3(&b, vs);
+        v += 3;
+        ol3d_Vector3_t c = {v[0], v[1], v[2]};
+        ol3d_matrix_multi_v3(&c, vs);
+        v += 3;
+        ol3d_Vector3_t _color = {color[0], color[1], color[2]};
+        color += 3;
+        ol3d_draw_Triangle(target, &a, &b, &c, &_color);
+    }
+
 }
