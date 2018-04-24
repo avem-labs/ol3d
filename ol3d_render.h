@@ -11,6 +11,15 @@
 #define COLOR_CHANNEL_RANGE_G   63
 #define COLOR_CHANNEL_RANGE_B   63
 
+// OBJ file parser
+typedef struct {
+    long v1;
+    // unsigned int vn1;
+    long v2;
+    // unsigned int vn2;
+    long v3;
+    // unsigned int vn3;
+} ol3d_obj_face;
 // typedef unsigned char ol3d_pixel_t;
 
 // typedef ol3d_pixel_t ol3d_buffer_t[BUFFER_SIZE];

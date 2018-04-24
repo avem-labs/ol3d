@@ -86,15 +86,17 @@ void ol3d_clean_buffer(unsigned char *target) {
 
 void ol3d_draw_Element(unsigned char *target, long *f, double *v, double *n, unsigned int len, ol3d_matrix_t vs) {
     while((*f)!=0) {
-        ol3d_Vector3_t a = {v[(f[0]-1)*3], v[(f[0]-1)*3+1], v[(f[0]-1)*3+2]};
+        // Line number start from 1
+        // Array offset start from 0
+        ol3d_Vector3_t a = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v1-1];
         ol3d_matrix_multi_v3(&a, vs);
-        f++;
-        ol3d_Vector3_t b = {v[(f[0]-1)*3], v[(f[0]-1)*3+1], v[(f[0]-1)*3+2]};
+        // f++;
+        ol3d_Vector3_t b = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v2-1];
         ol3d_matrix_multi_v3(&b, vs);
-        f++;
-        ol3d_Vector3_t c = {v[(f[0]-1)*3], v[(f[0]-1)*3+1], v[(f[0]-1)*3+2]};
+        // f++;
+        ol3d_Vector3_t c = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v3-1];
         ol3d_matrix_multi_v3(&c, vs);
-        f++;
+        f = ((ol3d_obj_face *)f) + 1;
         // ol3d_Vector3_t _color = {n[0], n[1], n[2]};
         ol3d_Vector3_t _color = {
             0.4,0.4,0.4
