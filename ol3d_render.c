@@ -22,9 +22,15 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
     // Override pixel
     if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
         unsigned int offset = y * SCREEN_SIZE * PIXEL_SIZE + x * PIXEL_SIZE;
+#ifdef BLEND_MODE
         target[offset]      |= (unsigned char)raw.x;
         target[offset+1]    |= (unsigned char)raw.y;
         target[offset+2]    |= (unsigned char)raw.z;
+#else
+        target[offset]      = (unsigned char)raw.x;
+        target[offset+1]    = (unsigned char)raw.y;
+        target[offset+2]    = (unsigned char)raw.z;
+#endif
     }
 }
 
@@ -98,9 +104,7 @@ void ol3d_draw_Element(unsigned char *target, long *f, double *v, double *n, uns
         ol3d_matrix_multi_v3(&c, vs);
         f = ((ol3d_obj_face *)f) + 1;
         // ol3d_Vector3_t _color = {n[0], n[1], n[2]};
-        ol3d_Vector3_t _color = {
-            0.4,0.4,0.4
-        };
+        ol3d_Vector3_t _color = ol3d_vector_multiply(&a, a.z);
         ol3d_draw_Triangle(target, &a, &b, &c, &_color);
     }
 
