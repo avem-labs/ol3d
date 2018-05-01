@@ -58,6 +58,8 @@ void loop () {
 
 ### OBJ model headerfile style
 
+Simply modify a OBJ file
+
 ```c
 double mesh_v[] = {
     -0.500000, -0.500000, 0.500000,
