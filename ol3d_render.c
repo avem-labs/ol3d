@@ -14,14 +14,20 @@
 static unsigned char ol3d_render_Zbuffer[SCREEN_SIZE*SCREEN_SIZE] = {};
 #endif
 
-void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y, const unsigned char z) {
-    // Color conversion
+unsigned char ol3d_LineMode = 0;
+
+ol3d_Vector3_t ol3d_getColor(ol3d_Vector3_t *c) {
     ol3d_Vector3_t rgb = {
         .x = COLOR_CHANNEL_RANGE_R,
         .y = COLOR_CHANNEL_RANGE_G,
         .z = COLOR_CHANNEL_RANGE_B
     };
-    ol3d_Vector3_t raw = ol3d_vector_dot(color, &rgb);
+    return ol3d_vector_dot(c, &rgb);
+}
+
+void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y, const unsigned char z) {
+    // Color conversion
+    ol3d_Vector3_t raw = ol3d_getColor(color);
 
     // Override pixel
     if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
@@ -83,6 +89,12 @@ void ol3d_draw_Triangle(
 #ifdef ENABLE_DEPTH
     unsigned char z = (unsigned int)(AABB_MAX(ss_A.z, ss_B.z, ss_C.z));
 #endif
+    if(ol3d_LineMode) {
+        ol3d_draw_Line(target, color, &ss_A, &ss_B);
+        ol3d_draw_Line(target, color, &ss_B, &ss_C);
+        ol3d_draw_Line(target, color, &ss_C, &ss_A);
+        return;
+    }
 
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
@@ -121,17 +133,47 @@ void ol3d_draw_Element(unsigned char *target, long *f, double *v, double *n, uns
         // Array offset start from 0
         ol3d_Vector3_t color;
         ol3d_Vector3_t a = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v1-1];
-        color.x = a.z * 1000;
+        color.x = a.z * 10;
         ol3d_matrix_multi_v3(&a, vs);
         ol3d_Vector3_t b = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v2-1];
-        color.y = b.z * 1000;
+        color.y = b.z * 10;
         ol3d_matrix_multi_v3(&b, vs);
         ol3d_Vector3_t c = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v3-1];
-        color.z = c.z * 1000;
+        color.z = c.z * 10;
         ol3d_matrix_multi_v3(&c, vs);
         f = ((ol3d_obj_face *)f) + 1;
 
         ol3d_draw_Triangle(target, &a, &b, &c, &color);
     }
 
+}
+
+void ol3d_draw_Line(unsigned char *target ,const ol3d_Vector3_t *color, ol3d_Vector3_t *start, ol3d_Vector3_t *end) {
+    int sx, sy, ex, ey;
+    if(start->x < end->x) {
+        sx = start->x;
+        ex = end->x;
+        sy = start->y;
+        ey = end->y;
+    } else {
+        sx = end->x;
+        ex = start->x;
+        sy = end->y;
+        ey = start->y;
+    }
+
+    float dx = ex - sx;
+    float dy = ey - sy;
+    float d = dy / dx;
+    float e;
+    for(int t = 0; t < dx; t++) {
+        ol3d_draw_Pixel(target, color, sx++, sy+t*d, 0);
+
+        // TODO: bresenham
+        // sx++;
+        // e = sy+d-sy;
+        // sy += e
+        //     ? 1
+        //     : -1;
+    }
 }
