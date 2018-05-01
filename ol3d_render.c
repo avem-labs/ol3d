@@ -1,6 +1,6 @@
 #include "ol3d_core.h"
 
-static double ol3d_render_Zbuffer[SCREEN_SIZE*SCREEN_SIZE] = {};
+#define ENABLE_DEPTH
 // AABB box
 #define AABB_MIN(x, y, z)   (fmin((x), fmin((y), (z))))
 #define AABB_MAX(x, y, z)   (fmax((x), fmax((y), (z))))
@@ -10,7 +10,11 @@ static double ol3d_render_Zbuffer[SCREEN_SIZE*SCREEN_SIZE] = {};
 
 #define COORD(x)            (SCREEN_SIZE * ((x)*0.5 + 0.5))
 
-void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y) {
+#ifdef ENABLE_DEPTH
+static unsigned char ol3d_render_Zbuffer[SCREEN_SIZE*SCREEN_SIZE] = {};
+#endif
+
+void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y, const unsigned char z) {
     // Color conversion
     ol3d_Vector3_t rgb = {
         .x = COLOR_CHANNEL_RANGE_R,
@@ -22,14 +26,24 @@ void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const u
     // Override pixel
     if((x < SCREEN_SIZE) && (y < SCREEN_SIZE) && (x >= 0) && (y >= 0)) {
         unsigned int offset = y * SCREEN_SIZE * PIXEL_SIZE + x * PIXEL_SIZE;
+#ifdef ENABLE_DEPTH
+        unsigned int zoffset = y * SCREEN_SIZE + x;
+        if(z >= ol3d_render_Zbuffer[zoffset]) {
+#endif
+
 #ifdef BLEND_MODE
-        target[offset]      |= (unsigned char)raw.x;
-        target[offset+1]    |= (unsigned char)raw.y;
-        target[offset+2]    |= (unsigned char)raw.z;
+            target[offset]      |= (unsigned char)raw.x;
+            target[offset+1]    |= (unsigned char)raw.y;
+            target[offset+2]    |= (unsigned char)raw.z;
 #else
-        target[offset]      = (unsigned char)raw.x;
-        target[offset+1]    = (unsigned char)raw.y;
-        target[offset+2]    = (unsigned char)raw.z;
+            target[offset]      = (unsigned char)raw.x;
+            target[offset+1]    = (unsigned char)raw.y;
+            target[offset+2]    = (unsigned char)raw.z;
+#endif
+
+#ifdef ENABLE_DEPTH
+            ol3d_render_Zbuffer[zoffset] = z;
+        }
 #endif
     }
 }
@@ -66,14 +80,19 @@ void ol3d_draw_Triangle(
     maxX = (unsigned int)(AABB_MAX(ss_A.x, ss_B.x, ss_C.x));
     minY = (unsigned int)(AABB_MIN(ss_A.y, ss_B.y, ss_C.y));
     maxY = (unsigned int)(AABB_MAX(ss_A.y, ss_B.y, ss_C.y));
+#ifdef ENABLE_DEPTH
+    unsigned char z = (unsigned int)(AABB_MAX(ss_A.z, ss_B.z, ss_C.z));
+#endif
 
     for(unsigned int y = minY; y < maxY; y++) {
         for(unsigned int x = minX; x < maxX; x++) {
             if(inTriangle(ss_A, ss_B, ss_C, x, y)) {
                 // Fragment Shader
-                ol3d_draw_Pixel(target, color, x, y);
-                // depth buffer
-                // ol3d_render_zbuffer[y*BUFFER_SIZE+x] =
+#ifdef ENABLE_DEPTH
+                ol3d_draw_Pixel(target, color, x, y, z);
+#else
+                ol3d_draw_Pixel(target, color, x, y, 0);
+#endif
             }
         }
     }
@@ -81,11 +100,17 @@ void ol3d_draw_Triangle(
 }
 
 void ol3d_clean_buffer(unsigned char *target) {
+#ifdef ENABLE_DEPTH
+    unsigned char *zbuf = ol3d_render_Zbuffer;
+#endif
     for(unsigned int y = 0; y < SCREEN_SIZE; y++) {
 		for(unsigned int x = 0; x < SCREEN_SIZE; x++) {
 			*target++ = 0;
 			*target++ = 0;
 			*target++ = 0;
+#ifdef ENABLE_DEPTH
+            *zbuf++ = 0;
+#endif
 		}
 	}
 }
@@ -94,18 +119,19 @@ void ol3d_draw_Element(unsigned char *target, long *f, double *v, double *n, uns
     while((*f)!=0) {
         // Line number start from 1
         // Array offset start from 0
+        ol3d_Vector3_t color;
         ol3d_Vector3_t a = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v1-1];
+        color.x = a.z * 1000;
         ol3d_matrix_multi_v3(&a, vs);
-        // f++;
         ol3d_Vector3_t b = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v2-1];
+        color.y = b.z * 1000;
         ol3d_matrix_multi_v3(&b, vs);
-        // f++;
         ol3d_Vector3_t c = ((ol3d_Vector3_t *)v)[((ol3d_obj_face *)f)->v3-1];
+        color.z = c.z * 1000;
         ol3d_matrix_multi_v3(&c, vs);
         f = ((ol3d_obj_face *)f) + 1;
-        // ol3d_Vector3_t _color = {n[0], n[1], n[2]};
-        ol3d_Vector3_t _color = ol3d_vector_multiply(&a, a.z);
-        ol3d_draw_Triangle(target, &a, &b, &c, &_color);
+
+        ol3d_draw_Triangle(target, &a, &b, &c, &color);
     }
 
 }

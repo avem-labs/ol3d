@@ -24,7 +24,7 @@ typedef struct {
 
 // typedef ol3d_pixel_t ol3d_buffer_t[BUFFER_SIZE];
 
-extern void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y);
+extern void ol3d_draw_Pixel(unsigned char *target ,const ol3d_Vector3_t *color, const unsigned int x, const unsigned int y, const unsigned char z);
 extern void ol3d_draw_Triangle(unsigned char *target, const ol3d_Vector3_t *a, const ol3d_Vector3_t *b, const ol3d_Vector3_t *c, const ol3d_Vector3_t *color);
 extern void ol3d_clean_buffer(unsigned char *target);
 extern void ol3d_draw_Element(unsigned char *target, long *f, double *v, double *n, unsigned int len, ol3d_matrix_t vs);
