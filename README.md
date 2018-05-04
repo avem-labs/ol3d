@@ -16,10 +16,8 @@ Render a low poly wolf
 #include <ol3d_core.h>
 #include <Wolf.h> // .obj data
 
-void OLED_init ();
-void w_cmd (uint8_t c);
-void w_data (uint8_t d);
-void fill_ram (unsigned char *buf);
+void OLED_init();
+void OLED_fill(unsigned char *buf);
 
 // Declare display buffer, see ol3d_render.h
 uint8_t buffer[128*128*3] = {};
