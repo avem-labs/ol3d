@@ -2,14 +2,14 @@
 #define _OL3D_RENDER_H_
 
 // Screen
-#define SCREEN_SIZE             128
+#define SCREEN_SIZE             256
 #define PIXEL_SIZE              3
 #define BUFFER_SIZE             SCREEN_SIZE*SCREEN_SIZE*PIXEL_SIZE
 
 // Format : RRRR RGGG GGGB BBBB
-#define COLOR_CHANNEL_RANGE_R   63
-#define COLOR_CHANNEL_RANGE_G   63
-#define COLOR_CHANNEL_RANGE_B   63
+#define COLOR_CHANNEL_RANGE_R   255
+#define COLOR_CHANNEL_RANGE_G   255
+#define COLOR_CHANNEL_RANGE_B   255
 
 extern unsigned char ol3d_LineMode;
 // OBJ file parser
